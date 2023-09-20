@@ -1,0 +1,43 @@
+CAPI=2:
+name: "${For}:${PROJECT_NAME}:${NAME}:1.0.0"
+description: "${Description}"
+
+filesets:
+    rtl:
+        files:
+            - "source/${NAME}.sv"
+        file_type: systemVerilogSource
+
+    tb:
+        files:
+            - "testbench/${NAME}_tb.sv"
+        file_type: systemVerilogSource
+        
+    verilator_wrapper:
+        files:
+            - "wrapper/${NAME}_tb.cpp"
+        file_type: cppSource
+
+targets:
+    default: &default
+        filesets:
+            - rtl
+        toplevel: ${NAME}
+
+    sim:
+        <<: *default
+        default_tool: verilator
+        filesets_append:
+            - tb
+            - "tool_verilator? (verilator_wrapper)"
+        toplevel: ${NAME}_tb
+        tools:
+            verilator:
+                verilator_options:
+                    - --cc
+                    - --trace
+                    - --exe
+                    - --timing
+                    - --coverage
+                make_options:
+                    - -j
