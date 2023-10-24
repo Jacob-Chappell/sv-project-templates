@@ -1,5 +1,5 @@
-#[[#include]]# "V${NAME}_tb.h"
-#[[#include]]# "verilated.h"
+#include "V${MOD_NAME}_tb.h"
+#include "verilated.h"
 
 int main(int argc, char ** argv) {
     VerilatedContext * contextp = new VerilatedContext;
@@ -7,7 +7,7 @@ int main(int argc, char ** argv) {
     contextp->traceEverOn(true);
 
     contextp->commandArgs(argc, argv);
-    V${NAME}_tb * top = new V${NAME}_tb{contextp};
+    V${MOD_NAME}_tb * top = new V${MOD_NAME}_tb{contextp};
 
 
     while (!contextp->gotFinish()) {
@@ -20,7 +20,7 @@ int main(int argc, char ** argv) {
     top->final();
 
     Verilated::mkdir("build/sim-verilator/logs");
-    contextp->coveragep()->write("build/sim-verilator/logs/coverage_${NAME}.dat");
+    contextp->coveragep()->write("build/sim-verilator/logs/coverage_${MOD_NAME}.dat");
 
     delete top;
     delete contextp;
