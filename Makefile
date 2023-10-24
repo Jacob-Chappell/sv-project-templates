@@ -53,7 +53,10 @@ sim_%: build_%
 # FILE CREATION TARGETS
 
 wrapper_%:
-	export MOD_NAME="$*" & envsubst -i templates/svm.cpp -o tmp/$*.cpp
+	export MOD_NAME="$*" ;\
+	export MOD_DIR=$(shell dirname $(shell find -name "$*.core"));\
+	mkdir $$MOD_DIR/sv_wrapper | true;\
+	envsubst -i templates/svm.cpp -o $$MOD_DIR/sv_wrapper/$*_tb.cpp '$${MOD_NAME}'
 
 export ORGANIZATION
 export PROJECT_NAME
@@ -64,7 +67,7 @@ module_%: $(SUB_DIR)
 	export TMP_PATH=$(shell realpath --relative-to=${SUB_DIR} tmp);\
 	envsubst -i templates/svm.sv -o ${SUB_DIR}/source/$*.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
 	envsubst -i templates/tb_svm.sv -o ${SUB_DIR}/testbench/$*_tb.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-	envsubst -i templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}' '$${TMP_PATH}';
+	envsubst -i templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}' '$${TMP_PATH}';\
 
 
 
@@ -104,8 +107,8 @@ reload:
 
 # CLEAN TARGETS
 
-clean: clean_build  clean_tmp
-veryclean: clean_build clean_tmp clean_libs clean_rlt
+clean: clean_build
+veryclean: clean_build clean_libs clean_rlt
 
 clean_libs:
 	rm -rf fusesoc_libraries
@@ -113,10 +116,6 @@ clean_libs:
 
 clean_build:
 	rm -rf build
-
-clean_tmp:
-	rm -rf tmp
-	mkdir tmp
 
 clean_rlt:
 	rm -rf sv_coverage

@@ -26,7 +26,6 @@ module ${MOD_NAME}_tb ();
         @(posedge clk);
     end
     endtask
-#end
 
     ${MOD_NAME} #() DUT (.*);
 

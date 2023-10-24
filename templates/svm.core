@@ -15,7 +15,7 @@ filesets:
         
     verilator_wrapper:
         files:
-            - "${TMP_PATH}/${MOD_NAME}_tb.cpp"
+            - "sv_wrapper/${MOD_NAME}_tb.cpp"
         file_type: cppSource
 
 targets:
