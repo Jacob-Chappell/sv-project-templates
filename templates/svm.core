@@ -7,6 +7,8 @@ filesets:
         files:
             - "source/${MOD_NAME}.sv"
         file_type: systemVerilogSource
+#       depend:
+#           - "org:project:module"
 
     tb:
         files:
