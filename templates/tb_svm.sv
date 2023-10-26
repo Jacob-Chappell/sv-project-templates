@@ -1,11 +1,9 @@
 `timescale 1ns / 10ps
 /* verilator coverage_off */
 
-// Description: ${Description}
+module ${MOD_NAME}_tb ();
 
-module ${NAME}_tb ();
-
-    #if(${Is_Clocked}==true)localparam CLK_PERIOD = ${Clock_Period};
+    localparam CLK_PERIOD = 10ns;
     
     logic clk, n_rst;
     
@@ -28,17 +26,15 @@ module ${NAME}_tb ();
         @(posedge clk);
     end
     endtask
-#end
 
-    ${NAME} #() DUT (.*);
+    ${MOD_NAME} #() DUT (.*);
 
     initial begin
-        #if(${Is_Clocked}==true)tb_n_rst = 1;
+        n_rst = 1;
         
         reset_dut;
-        #end
-        
-        ${DS}finish;
+
+
     end
 endmodule
 

@@ -11,6 +11,8 @@ The Makefile has several places where the ${For} and ${PROJECT_NAME} variables n
 
 - FuseSoC 2.2.1 or higher
 
+- envsubst
+
 # Future Work
 
 Allow dependencies to be added using VTL, rather than having to type out all of them individually in the .core file of each module.
