@@ -6,7 +6,7 @@ module ${MOD_NAME}_tb ();
     localparam CLK_PERIOD = 10ns;
     
     logic clk, n_rst;
-    
+
     // clockgen
     always begin
         clk = 1'b0;

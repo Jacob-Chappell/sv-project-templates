@@ -1,3 +1,4 @@
 sv_wrapper/
-build/
-.idea/
+/build/
+/waveform.vcd
+/sv_coverage/

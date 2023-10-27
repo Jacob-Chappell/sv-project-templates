@@ -3,6 +3,8 @@ FUSESOC_BUILD_SIM = fusesoc --cores-root . run --setup --build --build-root buil
 ORGANIZATION = roboticowl
 PROJECT_NAME = sv-templates
 
+.SILENT:
+
 help:
 	@echo "----------------------------------------------------------------"
 	@echo "Administrative Targets:"
@@ -55,30 +57,35 @@ build_%: clean wrapper_%
 	$(FUSESOC_BUILD_SIM) ${ORGANIZATION}:${PROJECT_NAME}:$*
 
 sim_%: build_%
-	./build/sim-verilator/Vtb_$*
+	@echo "Starting simulation of $* ..."
+	./build/sim-verilator/V$*_tb
+	@echo "Done"
 
 
 
 # FILE CREATION TARGETS
 
 wrapper_%:
+	@echo "Creating verilator wrapper $*_tb.cpp ..."
 	export MOD_NAME="$*" ;\
 	export MOD_DIR=$(shell dirname $(shell find -name "$*.core"));\
-	mkdir $$MOD_DIR/sv_wrapper | true;\
+	mkdir $$MOD_DIR/sv_wrapper &> /dev/null | true;\
 	envsubst -i templates/svm.cpp -o $$MOD_DIR/sv_wrapper/$*_tb.cpp '$${MOD_NAME}'
+	@echo "Done"
 
 export ORGANIZATION
 export PROJECT_NAME
 SUB_DIR ?= .
 module_%: $(SUB_DIR)
+	@echo "Creating files for module $* in ${SUB_DIR} ..."
 	export SUB_DIR;\
 	export MOD_NAME=$*;\
-	mkdir ${SUB_DIR}/source | true;\
-	mkdir ${SUB_DIR}/testbench | true;\
+	mkdir ${SUB_DIR}/source &> /dev/null | true;\
+	mkdir ${SUB_DIR}/testbench &> /dev/null | true;\
 	envsubst -i templates/svm.sv -o ${SUB_DIR}/source/$*.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
 	envsubst -i templates/tb_svm.sv -o ${SUB_DIR}/testbench/$*_tb.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-	envsubst -i templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-
+	envsubst -i templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';
+	@echo "Done"
 
 
 # COVERAGE TARGETS
@@ -122,7 +129,7 @@ veryclean: clean_build clean_libs clean_rlt
 
 clean_libs:
 	rm -rf fusesoc_libraries
-	rm fusesoc.conf
+	rm -f fusesoc.conf
 
 clean_build:
 	rm -rf build
