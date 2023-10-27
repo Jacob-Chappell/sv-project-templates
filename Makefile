@@ -70,7 +70,7 @@ wrapper_%:
 	export MOD_NAME="$*" ;\
 	export MOD_DIR=$(shell dirname $(shell find -name "$*.core"));\
 	mkdir $$MOD_DIR/sv_wrapper &> /dev/null | true;\
-	envsubst -i templates/svm.cpp -o $$MOD_DIR/sv_wrapper/$*_tb.cpp '$${MOD_NAME}'
+	envsubst -i .templates/svm.cpp -o $$MOD_DIR/sv_wrapper/$*_tb.cpp '$${MOD_NAME}'
 	@echo "Done"
 
 export ORGANIZATION
@@ -82,9 +82,9 @@ module_%: $(SUB_DIR)
 	export MOD_NAME=$*;\
 	mkdir ${SUB_DIR}/source &> /dev/null | true;\
 	mkdir ${SUB_DIR}/testbench &> /dev/null | true;\
-	envsubst -i templates/svm.sv -o ${SUB_DIR}/source/$*.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-	envsubst -i templates/tb_svm.sv -o ${SUB_DIR}/testbench/$*_tb.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-	envsubst -i templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';
+	envsubst -i .templates/svm.sv -o ${SUB_DIR}/source/$*.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
+	envsubst -i .templates/tb_svm.sv -o ${SUB_DIR}/testbench/$*_tb.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
+	envsubst -i .templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';
 	@echo "Done"
 
 
