@@ -1,4 +1,4 @@
-FUSESOC_BUILD_SIM = fusesoc --cores-root . run --setup --build --build-root build --target sim --tool verilator
+FUSESOC_GET = fusesoc --cores-root . run --setup --build-root build --target sim --tool verilator
 
 ORGANIZATION = roboticowl
 PROJECT_NAME = sv-templates
@@ -66,11 +66,10 @@ sim_%: build_%
 # FILE CREATION TARGETS
 
 wrapper_%:
-	@echo "Creating verilator wrapper $*_tb.cpp ..."
-	export MOD_NAME="$*" ;\
+	@echo "Creating verilator wrapper tb_$*.cpp ..."
 	export MOD_DIR=$(shell dirname $(shell find -name "$*.core"));\
-	mkdir $$MOD_DIR/sv_wrapper &> /dev/null | true;\
-	envsubst -i .templates/svm.cpp -o $$MOD_DIR/sv_wrapper/$*_tb.cpp '$${MOD_NAME}'
+	mkdir $$MOD_DIR/sv_wrapper &> /dev/null;\
+	bash .scripts/cpp.sh $* > $$MOD_DIR/sv_wrapper/tb_$*.cpp
 	@echo "Done"
 
 export ORGANIZATION
@@ -79,12 +78,11 @@ SUB_DIR ?= .
 module_%: $(SUB_DIR)
 	@echo "Creating files for module $* in ${SUB_DIR} ..."
 	export SUB_DIR;\
-	export MOD_NAME=$*;\
-	mkdir ${SUB_DIR}/source &> /dev/null | true;\
-	mkdir ${SUB_DIR}/testbench &> /dev/null | true;\
-	envsubst -i .templates/svm.sv -o ${SUB_DIR}/source/$*.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-	envsubst -i .templates/tb_svm.sv -o ${SUB_DIR}/testbench/$*_tb.sv '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';\
-	envsubst -i .templates/svm.core -o ${SUB_DIR}/$*.core '$${MOD_NAME}' '$${ORGANIZATION}' '$${PROJECT_NAME}';
+	mkdir ${SUB_DIR}/source &> /dev/null;\
+	mkdir ${SUB_DIR}/testbench &> /dev/null;\
+	bash .scripts/mod.sh $* > ${SUB_DIR}/source/$*.sv;\
+	bash .scripts/tb.sh $* > ${SUB_DIR}/testbench/tb_$*.sv;\
+	bash .scripts/core.sh ${ORGANIZATION} ${PROJECT_NAME} $* > ${SUB_DIR}/$*.core;
 	@echo "Done"
 
 
