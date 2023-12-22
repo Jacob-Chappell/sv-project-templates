@@ -1,4 +1,4 @@
-FUSESOC_GET = fusesoc --cores-root . run --setup --build-root build --target sim --tool verilator
+FUSESOC_BUILD_SIM = fusesoc --cores-root . run --setup --build --build-root build --target sim --tool verilator
 
 ORGANIZATION = roboticowl
 PROJECT_NAME = sv-templates
