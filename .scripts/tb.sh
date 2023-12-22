@@ -11,6 +11,11 @@ echo "    localparam CLK_PERIOD = 10ns;"
 echo
 echo "    logic clk, n_rst;"
 echo
+echo "initial begin"
+echo "    \$dumpfile(\"waveform.vcd\");"
+echo "    \$dumpvars;"
+echo "end"
+echo
 echo "    // clockgen"
 echo "    always begin"
 echo "        clk = 1\'b0;"
